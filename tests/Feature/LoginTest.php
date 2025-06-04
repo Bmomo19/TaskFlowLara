@@ -4,13 +4,11 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 
 class LoginTest extends TestCase
 {
-//    use RefreshDatabase;
-
-    /** @test */
+    #[Test]
     public function user_can_login_with_valid_credentials()
     {
         // Arrange
@@ -33,7 +31,7 @@ class LoginTest extends TestCase
             ]);
     }
 
-    /** @test */
+    #[Test]
     public function login_fails_with_wrong_password()
     {
         // Arrange
@@ -54,7 +52,7 @@ class LoginTest extends TestCase
             ]);
     }
 
-    /** @test */
+    #[Test]
     public function login_fails_with_invalid_email()
     {
         // Act
@@ -68,7 +66,7 @@ class LoginTest extends TestCase
             ->assertJsonValidationErrors(['email']);
     }
 
-    /** @test */
+    #[Test]
     public function login_fails_when_fields_are_missing()
     {
         $response = $this->postJson('/api/login', []);

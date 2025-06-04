@@ -44,20 +44,16 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required'
         ]);
-        try {
-            $credentials = $request->only('email', 'password');
-            if (!Auth::attempt($credentials)) {
-                return response()->json(['error' => 'Unauthorized'], 401);
-            }
 
-            $user = Auth::user();
-            $token = $user->createToken('API Token')->accessToken;
+        $user = User::where('email', $request->email)->first();
 
-            return response()->json(['user' => $user, 'token' => $token]);
-        } catch (\Throwable $e) {
-            Log::error($e);
-            return response()->json(['error' => $e->getMessage()], 500);
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
+
+        $token = $user->createToken('AppToken')->accessToken;
+
+        return response()->json(['user' => $user, 'token' => $token]);
     }
 
     public function logout(Request $request): JsonResponse
